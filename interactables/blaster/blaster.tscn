@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://b486dqma4flo0"]
+
+[ext_resource type="Script" uid="uid://x7lr4kuwd1c7" path="res://interactables/blaster/blaster.gd" id="1_g4g27"]
+[ext_resource type="Texture2D" uid="uid://c0f2vpja8bn2s" path="res://interactables/blaster/blaster.png" id="1_xharv"]
+[ext_resource type="Resource" uid="uid://der8prsqid1i5" path="res://items/blaster.tres" id="2_dcgkm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mb68y"]
+size = Vector3(7.605, 1.705, 1.45)
+
+[node name="Blaster" type="Node3D" unique_id=1814706137]
+script = ExtResource("1_g4g27")
+gives_item = ExtResource("2_dcgkm")
+prompt_text = "Shoot em up"
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=468492967]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=2018632010]
+shape = SubResource("BoxShape3D_mb68y")
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=1954984256]
+billboard = 1
+texture = ExtResource("1_xharv")

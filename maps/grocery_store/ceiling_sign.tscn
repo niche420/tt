@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://dxxji4mgf0j0l"]
+
+[ext_resource type="PackedScene" uid="uid://43qg0luwxtaj" path="res://maps/grocery_store/ceiling_sign.blend" id="1_tbe7k"]
+
+[node name="ceiling_sign" unique_id=686236989 instance=ExtResource("1_tbe7k")]

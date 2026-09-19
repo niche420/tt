@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://cblldqn2qr3rs"]
+
+[ext_resource type="Script" uid="uid://b4nxmeyvxkrwe" path="res://character/guard/security_spawner.gd" id="1_8783g"]
+
+[node name="SecuritySpawner" type="Node3D" unique_id=1053686777]
+script = ExtResource("1_8783g")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=1665179881]
+
+[node name="Backdoor" type="Marker3D" parent="." unique_id=1399908092]

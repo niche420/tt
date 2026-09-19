@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccrqx8wo6pwjt"
-path="res://.godot/imported/beef_chomped.png-b35a8e2391ba344f6066748a07343c9f.ctex"
+uid="uid://bpqu06p0pl452"
+path="res://.godot/imported/mom_mad.png-e548598b01d6509d2aa22e506b34c144.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://interactables/beef_chomped.png"
-dest_files=["res://.godot/imported/beef_chomped.png-b35a8e2391ba344f6066748a07343c9f.ctex"]
+source_file="res://character/mom/mom_mad.png"
+dest_files=["res://.godot/imported/mom_mad.png-e548598b01d6509d2aa22e506b34c144.ctex"]
 
 [params]
 

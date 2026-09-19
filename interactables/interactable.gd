@@ -10,6 +10,7 @@ extends Node3D
 func _ready() -> void:
 	if list_item_name != "":
 		GameManager.register_item(list_item_name)
+		add_to_group("list_items")
 
 func is_locked() -> bool:
 	return required_item != "" and not Inventory.has(required_item)
@@ -28,7 +29,14 @@ func try_interact(player: Node) -> void:
 		Inventory.remove(required_item)
 	_interact(player)
 	if list_item_name != "":
-		GameManager.destroy_item(list_item_name)
+		GameManager.sabotage_item(list_item_name, global_position)
+
+func collect_by_mom() -> void:
+	var item_name := list_item_name
+	visible = false
+	remove_from_group("list_items")
+	queue_free()
+	GameManager.collect_item(item_name)
 
 func _interact(player: Node) -> void:
 	pass
