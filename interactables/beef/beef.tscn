@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://kynxvvnt8xxg"]
+
+[ext_resource type="Texture2D" uid="uid://cwpovpaobmub1" path="res://interactables/beef/beef.png" id="1_7upoh"]
+[ext_resource type="Script" uid="uid://chph75n873g35" path="res://interactables/beef/beef.gd" id="1_slc3v"]
+[ext_resource type="Texture2D" uid="uid://ccrqx8wo6pwjt" path="res://interactables/beef/beef_chomped.png" id="2_slc3v"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mb68y"]
+
+[node name="Beef" type="Node3D" unique_id=249573822]
+script = ExtResource("1_slc3v")
+prompt_text = "Eat raw beef"
+locked_text = "Can't rip it open"
+required_item = "Need something sharp"
+list_item_name = "beef"
+
+[node name="ClosedSprite" type="Sprite3D" parent="." unique_id=431177265]
+pixel_size = 0.005
+billboard = 1
+texture = ExtResource("1_7upoh")
+
+[node name="OpenedSprite" type="Sprite3D" parent="." unique_id=602393153]
+visible = false
+pixel_size = 0.005
+billboard = 1
+texture = ExtResource("2_slc3v")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1375198652]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=551220854]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0)
+shape = SubResource("BoxShape3D_mb68y")

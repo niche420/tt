@@ -2,17 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c716ndloopoti"
-path.s3tc="res://.godot/imported/wine.png-9a1584b56684197042c6e9f1875bd7e4.s3tc.ctex"
+uid="uid://3aiktr2ctrps"
+path.s3tc="res://.godot/imported/commercial_fridge_5.png-cb43aeb3014fbe9abf993fb70f4675d6.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "422174deaf0d0bc9ccd70ec1cac53c76"
+}
 
 [deps]
 
-source_file="res://interactables/wine.png"
-dest_files=["res://.godot/imported/wine.png-9a1584b56684197042c6e9f1875bd7e4.s3tc.ctex"]
+source_file="res://maps/grocery_store/fridge/commercial_fridge_5.png"
+dest_files=["res://.godot/imported/commercial_fridge_5.png-cb43aeb3014fbe9abf993fb70f4675d6.s3tc.ctex"]
 
 [params]
 
@@ -26,8 +29,8 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=8
+roughness/src_normal="res://maps/grocery_store/fridge/commercial_fridge_6.png"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://ga7ep0aemb1v"]
+
+[ext_resource type="Script" uid="uid://dh3t6iny1fdgn" path="res://items/item_data.gd" id="1_10lxo"]
+[ext_resource type="Texture2D" uid="uid://d5ab5g7jh6an" path="res://items/glass_shard.png" id="1_k50xh"]
+
+[resource]
+script = ExtResource("1_10lxo")
+id = "glass_shard"
+display_name = "Glass shard"
+icon = ExtResource("1_k50xh")
+metadata/_custom_type_script = "uid://dh3t6iny1fdgn"

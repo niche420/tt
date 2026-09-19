@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://b5pat4ktu60ft"]
+
+[ext_resource type="Texture2D" uid="uid://brop5p7jhs5e3" path="res://character/mom/mom.png" id="1_b401l"]
+[ext_resource type="Script" uid="uid://besuj4b4pjv82" path="res://character/mom/mom.gd" id="1_qhn2w"]
+[ext_resource type="Script" uid="uid://c4dqgyrkvv3rk" path="res://character/stamina.gd" id="2_qhn2w"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0y1rj"]
+radius = 0.4
+height = 1.8
+
+[node name="Mom" type="CharacterBody3D" unique_id=1323709618]
+script = ExtResource("1_qhn2w")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=858552683]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_0y1rj")
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=548078692]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.885288, 0)
+pixel_size = 0.04
+billboard = 1
+texture = ExtResource("1_b401l")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=1955969918]
+path_desired_distance = 0.5
+target_desired_distance = 0.5
+
+[node name="Stamina" type="Node3D" parent="." unique_id=1273441183]
+script = ExtResource("2_qhn2w")

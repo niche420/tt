@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://der8prsqid1i5"]
+
+[ext_resource type="Script" uid="uid://dh3t6iny1fdgn" path="res://items/item_data.gd" id="1_4okcs"]
+[ext_resource type="Texture2D" uid="uid://c0f2vpja8bn2s" path="res://interactables/blaster/blaster.png" id="1_yyfne"]
+
+[resource]
+script = ExtResource("1_4okcs")
+id = "blaster"
+display_name = "Blaster"
+icon = ExtResource("1_yyfne")
+metadata/_custom_type_script = "uid://dh3t6iny1fdgn"

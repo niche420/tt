@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://b6mu50gltcwta"]
+
+[ext_resource type="Script" uid="uid://bn7tduw01birv" path="res://character/guard/guard.gd" id="1_1xofg"]
+[ext_resource type="Texture2D" uid="uid://d1sx1dxoeoxls" path="res://character/guard/guard.png" id="2_68n7i"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mb68y"]
+radius = 0.4
+height = 1.8
+
+[node name="Guard" type="CharacterBody3D" unique_id=248023088]
+collision_layer = 4
+script = ExtResource("1_1xofg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1290214157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_mb68y")
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=1921622779]
+billboard = 1
+texture = ExtResource("2_68n7i")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=967038273]
+path_desired_distance = 0.8
+target_desired_distance = 0.8
