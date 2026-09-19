@@ -2,12 +2,11 @@
 extends CharacterBody3D
 
 enum State { SHOPPING, CHASING }
+enum Mood { CALM, ANNOYED, FRUSTRATED, ANGRY }
 
 @export var waypoints_root: Node3D    # only used when nothing is left on her list
 @export var player: CharacterBody3D
-@export var angry_texture: Texture2D
 @export var walk_speed: float = 2.5
-@export var chase_speed: float = 5.0
 @export var shop_time: float = 3.0
 @export var catch_distance: float = 2.5
 
@@ -16,6 +15,16 @@ enum State { SHOPPING, CHASING }
 @export var view_angle: float = 100.0
 @export var notice_radius: float = 5.0
 @export var call_security_after: float = 8.0   # seconds of chasing
+
+@export_group("Moods")
+@export var annoyed_texture: Texture2D      # chase starts
+@export var frustrated_texture: Texture2D   # a third of her stamina gone
+@export var angry_texture: Texture2D        # last third of her stamina
+@export_range(0.0, 1.0) var frustrated_at: float = 0.66   # stamina fraction left
+@export_range(0.0, 1.0) var angry_at: float = 0.33
+@export var annoyed_speed: float = 20.0
+@export var frustrated_speed: float = 25.0
+@export var angry_speed: float = 30.0
 
 @onready var agent: NavigationAgent3D = $NavigationAgent3D
 @onready var stamina: Stamina = $Stamina
@@ -31,6 +40,7 @@ var patrolling: bool = false
 var waypoint_index: int = 0
 var chase_time: float = 0.0
 var security_was_called: bool = false
+var mood: Mood = Mood.CALM
 
 func _ready() -> void:
 	stamina.changed.connect(_on_stamina_changed)
@@ -176,26 +186,59 @@ func _start_chase() -> void:
 	chase_time = 0.0
 	waiting = false
 	stamina.draining = true   # she only stops when this runs out
-	if angry_texture:
-		sprite.texture = angry_texture
+	_set_mood(Mood.ANNOYED)
 	GameManager.mom_angered.emit()
 	GameManager.mom_chase_changed.emit(true)
 
 func _chasing(delta: float) -> void:
 	chase_time += delta
+
+	# her mood follows how much stamina she has left
+	var left := stamina.value / stamina.max_value
+	if left <= angry_at:
+		_set_mood(Mood.ANGRY)
+	elif left <= frustrated_at:
+		_set_mood(Mood.FRUSTRATED)
+
 	if chase_time > call_security_after and not security_was_called:
 		security_was_called = true
 		print("Mom called security!")
 		GameManager.security_called.emit()
 
 	agent.target_position = player.global_position
-	_move_along_path(chase_speed)
+	_move_along_path(_chase_speed())
 
 	var flat := Vector2(
 		global_position.x - player.global_position.x,
 		global_position.z - player.global_position.z)
 	if flat.length() < catch_distance:
 		GameManager.lose()
+
+func _set_mood(new_mood: Mood) -> void:
+	if new_mood == mood:
+		return
+	mood = new_mood
+	var tex: Texture2D = null
+	match mood:
+		Mood.ANNOYED:
+			tex = annoyed_texture
+		Mood.FRUSTRATED:
+			tex = frustrated_texture
+		Mood.ANGRY:
+			tex = angry_texture
+	if tex:
+		sprite.texture = tex
+	else:
+		push_warning("Mom: no texture assigned for mood " + Mood.keys()[mood])
+	print("Mom is now ", Mood.keys()[mood])
+
+func _chase_speed() -> float:
+	match mood:
+		Mood.FRUSTRATED:
+			return frustrated_speed
+		Mood.ANGRY:
+			return angry_speed
+	return annoyed_speed
 
 func _on_stamina_changed(value: float, max_value: float) -> void:
 	GameManager.mom_stamina_changed.emit(value, max_value)

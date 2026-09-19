@@ -5,7 +5,7 @@ enum State { CHASING, HOLDING, STUNNED }
 
 @export var player: Player
 @export var chase_speed: float = 4.5
-@export var catch_distance: float = 1.2
+@export var catch_distance: float = 2.5
 @export var stun_time: float = 4.0
 @export var shove_stun_time: float = 2.5
 @export var hits_to_retire: int = 3

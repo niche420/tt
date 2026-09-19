@@ -11,6 +11,8 @@ extends CanvasLayer
 @onready var ammo_label: Label = $AmmoLabel
 @onready var struggle_label: Label = $StruggleLabel
 
+@onready var angry_overlay: TextureRect = $AngryOverlay
+
 func _on_ammo_changed(ammo: int) -> void:
 	ammo_label.visible = true
 	ammo_label.text = "Darts: %d" % ammo
@@ -40,6 +42,8 @@ func _ready() -> void:
 	GameManager.struggle_ended.connect(_on_struggle_ended)
 	mom_bar.visible = false
 	struggle_label.visible = false
+	angry_overlay.visible = false
+	GameManager.mom_angered.connect(_on_mom_angered)
 	
 func _on_prompt_changed(text: String, locked: bool) -> void:
 	prompt.text = text
@@ -62,3 +66,11 @@ func _on_struggle_changed(count: int, needed: int) -> void:
 
 func _on_struggle_ended() -> void:
 	struggle_label.visible = false
+
+func _on_mom_angered() -> void:
+	angry_overlay.modulate.a = 1.0
+	angry_overlay.visible = true
+	var tween := create_tween()
+	tween.tween_interval(1.5)
+	tween.tween_property(angry_overlay, "modulate:a", 0.0, 0.5)
+	tween.tween_callback(func(): angry_overlay.visible = false)

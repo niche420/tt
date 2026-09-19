@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://sgwpo1qs24lj" path="res://ui/hud.gd" id="1_rbyyf"]
 [ext_resource type="Script" uid="uid://ffxtitdp3woy" path="res://ui/end_screen.gd" id="2_276te"]
 [ext_resource type="Script" uid="uid://cokaxm1gq77nt" path="res://ui/inventory_bar.gd" id="2_546lt"]
+[ext_resource type="Texture2D" uid="uid://bpqu06p0pl452" path="res://character/mom/mom_mad.png" id="4_7ihmi"]
 
 [node name="HUD" type="CanvasLayer" unique_id=727887040]
 script = ExtResource("1_rbyyf")
@@ -118,3 +119,15 @@ offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 32
+
+[node name="AngryOverlay" type="TextureRect" parent="." unique_id=1590195775]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_7ihmi")
+expand_mode = 1
+stretch_mode = 6
