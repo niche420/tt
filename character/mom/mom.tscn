@@ -27,3 +27,5 @@ target_desired_distance = 0.5
 
 [node name="Stamina" type="Node3D" parent="." unique_id=1273441183]
 script = ExtResource("2_qhn2w")
+drain_rate = 5.0
+regen_rate = 0.0

@@ -5,8 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://kynxvvnt8xxg" path="res://interactables/beef/beef.tscn" id="5_ghj2p"]
 [ext_resource type="PackedScene" uid="uid://b486dqma4flo0" path="res://interactables/blaster/blaster.tscn" id="6_hb22c"]
 [ext_resource type="PackedScene" uid="uid://cwixwwr3n6m4d" path="res://interactables/wine/wine.tscn" id="6_q0ds5"]
-[ext_resource type="Resource" uid="uid://der8prsqid1i5" path="res://items/blaster.tres" id="7_0y1rj"]
+[ext_resource type="PackedScene" uid="uid://cblldqn2qr3rs" path="res://character/guard/security_spawner.tscn" id="7_0y1rj"]
 [ext_resource type="PackedScene" uid="uid://b5pat4ktu60ft" path="res://character/mom/mom.tscn" id="7_e0bww"]
+[ext_resource type="PackedScene" uid="uid://b6mu50gltcwta" path="res://character/guard/guard.tscn" id="8_g8i5p"]
 
 [sub_resource type="Environment" id="Environment_mb68y"]
 ambient_light_source = 2
@@ -39,18 +40,18 @@ navigation_mesh = SubResource("NavigationMesh_3rkx7")
 
 [node name="Waypoints" type="Node3D" parent="." unique_id=1974435136]
 
-[node name="WinePoint" type="Marker3D" parent="Waypoints" unique_id=545710733]
-transform = Transform3D(0.8940082, -0.010350976, -0.44793105, -0.040548474, 0.99376154, -0.10389336, 0.446212, 0.111044444, 0.8880113, 9.828, -1.4, 66.315)
-
 [node name="BeefPoint" type="Marker3D" parent="Waypoints" unique_id=137277777]
 transform = Transform3D(0.59979826, -0.06928051, -0.79714644, -0.12290464, 0.97644496, -0.17734078, 0.7906558, 0.20434168, 0.57715505, -78.162834, -10.079465, -17.425396)
+
+[node name="WinePoint" type="Marker3D" parent="Waypoints" unique_id=545710733]
+transform = Transform3D(0.8940082, -0.010350976, -0.44793105, -0.040548474, 0.99376154, -0.10389336, 0.446212, 0.111044444, 0.8880113, 9.828, -1.4, 66.315)
 
 [node name="Mom" parent="." unique_id=1323709618 node_paths=PackedStringArray("waypoints_root", "player") instance=ExtResource("7_e0bww")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 147.31952, -0.3663578, 89.181)
 waypoints_root = NodePath("../Waypoints")
 player = NodePath("../player")
-walk_speed = 10.0
-chase_speed = 20.0
+walk_speed = 8.0
+chase_speed = 26.0
 
 [node name="Beef" parent="." unique_id=249573822 instance=ExtResource("5_ghj2p")]
 transform = Transform3D(0.99987596, 0, 0.015751416, 0, 1, 0, -0.015751416, 0, 0.99987596, -84.09113, 9.563288, -6.084155)
@@ -58,4 +59,17 @@ required_item = "glass_shard"
 
 [node name="Blaster" parent="." unique_id=1814706137 instance=ExtResource("6_hb22c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.08296, 7.729433, -91.56324)
-gives_item = ExtResource("7_0y1rj")
+ammo = 12
+prompt_text = "Tranq guards"
+
+[node name="SecuritySpawner" parent="." unique_id=1053686777 node_paths=PackedStringArray("player") instance=ExtResource("7_0y1rj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.876, 0, 52.986)
+guard_scene = ExtResource("8_g8i5p")
+player = NodePath("../player")
+max_guards = 2
+
+[node name="Entrance" type="Marker3D" parent="SecuritySpawner" unique_id=1422429210]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.954002, -1.4, -237.90005)
+
+[node name="Backdoor" type="Marker3D" parent="SecuritySpawner" unique_id=123152535]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -226.21378, 0, 122.47694)

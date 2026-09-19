@@ -9,6 +9,7 @@ extends CanvasLayer
 @onready var mom_bar: ProgressBar = $MomStamina
 @onready var list_label: RichTextLabel = $ShoppingList
 @onready var ammo_label: Label = $AmmoLabel
+@onready var struggle_label: Label = $StruggleLabel
 
 func _on_ammo_changed(ammo: int) -> void:
 	ammo_label.visible = true
@@ -35,6 +36,10 @@ func _ready() -> void:
 	GameManager.mom_chase_changed.connect(show_mom_bar)
 	ammo_label.visible = false
 	GameManager.ammo_changed.connect(_on_ammo_changed)
+	GameManager.struggle_changed.connect(_on_struggle_changed)
+	GameManager.struggle_ended.connect(_on_struggle_ended)
+	mom_bar.visible = false
+	struggle_label.visible = false
 	
 func _on_prompt_changed(text: String, locked: bool) -> void:
 	prompt.text = text
@@ -50,3 +55,10 @@ func set_mom_stamina(value: float, max_value: float) -> void:
 
 func show_mom_bar(shown: bool) -> void:
 	mom_bar.visible = shown
+
+func _on_struggle_changed(count: int, needed: int) -> void:
+	struggle_label.visible = true
+	struggle_label.text = "Caught! Mash SPACE!  %d / %d" % [count, needed]
+
+func _on_struggle_ended() -> void:
+	struggle_label.visible = false

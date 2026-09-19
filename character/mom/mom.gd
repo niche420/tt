@@ -5,33 +5,37 @@ enum State { SHOPPING, CHASING }
 
 @export var waypoints_root: Node3D    # only used when nothing is left on her list
 @export var player: CharacterBody3D
+@export var angry_texture: Texture2D
 @export var walk_speed: float = 2.5
 @export var chase_speed: float = 5.0
 @export var shop_time: float = 3.0
-@export var catch_distance: float = 1.2
+@export var catch_distance: float = 2.5
 
 @export_group("Vision")
 @export var view_distance: float = 12.0
 @export var view_angle: float = 100.0
-@export var give_up_time: float = 6.0
+@export var notice_radius: float = 5.0
+@export var call_security_after: float = 8.0   # seconds of chasing
 
 @onready var agent: NavigationAgent3D = $NavigationAgent3D
 @onready var stamina: Stamina = $Stamina
+@onready var sprite: Sprite3D = $Sprite3D
 
 var state: State = State.SHOPPING
 var active: bool = false
 var waiting: bool = false
-var alert: bool = false
 var known_items: Array[String] = []
 var facing: Vector3 = Vector3.FORWARD
-var time_since_seen: float = 0.0
 var current_target: Interactable = null
 var patrolling: bool = false
 var waypoint_index: int = 0
+var chase_time: float = 0.0
+var security_was_called: bool = false
 
 func _ready() -> void:
 	stamina.changed.connect(_on_stamina_changed)
 	stamina.depleted.connect(_on_exhausted)
+	GameManager.player_captured.connect(_on_player_captured)
 	await get_tree().physics_frame
 	active = true
 
@@ -39,9 +43,9 @@ func _physics_process(delta: float) -> void:
 	if not active:
 		return
 	velocity.y -= 20.0 * delta
-	_look_for_things()
 	match state:
 		State.SHOPPING:
+			_look_for_things()
 			_shopping()
 		State.CHASING:
 			_chasing(delta)
@@ -53,21 +57,33 @@ func _look_for_things() -> void:
 	for item_name in GameManager.destroyed_positions:
 		if item_name in known_items:
 			continue
-		if _can_see(GameManager.destroyed_positions[item_name]):
-			known_items.append(item_name)
-			alert = true
-			print("Mom noticed that ", item_name, " is destroyed!")
-			_start_chase()
-	if alert and state == State.SHOPPING and _can_see(player.global_position):
-		_start_chase()
+		if _can_notice_item(GameManager.destroyed_positions[item_name]):
+			_notice_item(item_name)
 
-func _can_see(target: Vector3, ignore_angle: bool = false) -> bool:
+func _can_notice_item(pos: Vector3) -> bool:
+	var flat := Vector3(pos.x - global_position.x, 0.0, pos.z - global_position.z)
+	var dist := flat.length()
+	if dist < 2.0:
+		return true   # practically standing on it
+	if dist <= notice_radius:
+		# close enough that the shelf's collider shouldn't hide it, but she must face it
+		return rad_to_deg(facing.angle_to(flat)) <= view_angle / 2.0
+	return _can_see(pos)
+
+func _notice_item(item_name: String) -> void:
+	if item_name in known_items:
+		return
+	known_items.append(item_name)
+	print("Mom noticed that ", item_name, " is destroyed!")
+	_start_chase()
+
+func _can_see(target: Vector3) -> bool:
 	var eyes := global_position + Vector3.UP * 1.6
 	var to_target := target - eyes
 	var flat := Vector3(to_target.x, 0.0, to_target.z)
 	if flat.length() > view_distance:
 		return false
-	if not ignore_angle and rad_to_deg(facing.angle_to(flat)) > view_angle / 2.0:
+	if rad_to_deg(facing.angle_to(flat)) > view_angle / 2.0:
 		return false
 	var query := PhysicsRayQueryParameters3D.create(eyes, target, 1)
 	query.exclude = [get_rid(), player.get_rid()]
@@ -85,6 +101,11 @@ func _shopping() -> void:
 			_patrol()
 			return
 	if agent.is_navigation_finished():
+		# arrived: if it's been wrecked, she notices right away
+		var st = GameManager.items.get(current_target.list_item_name, -1)
+		if st == GameManager.ItemState.SABOTAGED:
+			_notice_item(current_target.list_item_name)
+			return
 		_browse()
 		return
 	_move_along_path(walk_speed)
@@ -104,6 +125,7 @@ func _choose_target() -> bool:
 	if best:
 		patrolling = false
 		agent.target_position = best.global_position
+		print("Mom heading to: ", best.list_item_name)
 	return best != null
 
 func _needs_visit(item: Interactable) -> bool:
@@ -145,35 +167,28 @@ func _go_to_waypoint() -> void:
 	var marker := waypoints_root.get_child(waypoint_index) as Marker3D
 	agent.target_position = marker.global_position
 
-# ---------- Chasing ----------
+# ---------- Anger (permanent) ----------
 
 func _start_chase() -> void:
 	if state == State.CHASING:
 		return
 	state = State.CHASING
+	chase_time = 0.0
 	waiting = false
-	time_since_seen = 0.0
-	stamina.draining = true
+	stamina.draining = true   # she only stops when this runs out
+	if angry_texture:
+		sprite.texture = angry_texture
+	GameManager.mom_angered.emit()
 	GameManager.mom_chase_changed.emit(true)
 
-func _end_chase() -> void:
-	state = State.SHOPPING
-	stamina.draining = false
-	current_target = null
-	patrolling = false
-	waiting = false
-	GameManager.mom_chase_changed.emit(false)
-
 func _chasing(delta: float) -> void:
-	if _can_see(player.global_position, true):
-		time_since_seen = 0.0
-		agent.target_position = player.global_position
-	else:
-		time_since_seen += delta
-		if time_since_seen > give_up_time:
-			_end_chase()
-			return
+	chase_time += delta
+	if chase_time > call_security_after and not security_was_called:
+		security_was_called = true
+		print("Mom called security!")
+		GameManager.security_called.emit()
 
+	agent.target_position = player.global_position
 	_move_along_path(chase_speed)
 
 	var flat := Vector2(
@@ -188,6 +203,14 @@ func _on_stamina_changed(value: float, max_value: float) -> void:
 func _on_exhausted() -> void:
 	print("Mom is exhausted!")
 	GameManager.win()
+
+func _on_player_captured(_pos: Vector3) -> void:
+	_start_chase()
+
+func on_shot() -> void:
+	print("Mom was hit by a dart!")
+	sprite.modulate = Color(1, 0.3, 0.3)
+	create_tween().tween_property(sprite, "modulate", Color.WHITE, 0.25)
 
 # ---------- Movement helpers ----------
 

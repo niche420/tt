@@ -1,4 +1,3 @@
-# security_spawner.gd
 extends Node3D
 
 @export var guard_scene: PackedScene

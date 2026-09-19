@@ -54,6 +54,10 @@ func on_released() -> void:
 
 # called by the player's dart
 func on_shot() -> void:
+	var sprite := get_node_or_null("Sprite3D") as Sprite3D
+	if sprite:
+		sprite.modulate = Color(1, 0.3, 0.3)
+		create_tween().tween_property(sprite, "modulate", Color.WHITE, 0.25)
 	hits += 1
 	if state == State.HOLDING:
 		player.release()

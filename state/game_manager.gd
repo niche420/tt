@@ -6,6 +6,7 @@ signal game_won
 signal game_lost(reason: String)
 signal mom_stamina_changed(value: float, max_value: float)
 signal mom_chase_changed(active: bool)
+signal mom_angered
 signal ammo_changed(ammo: int)
 
 signal security_called
